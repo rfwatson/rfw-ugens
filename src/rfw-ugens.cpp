@@ -5,11 +5,11 @@
  *  Created by Rob Watson on 17/December/2008.
  *  Copyright 2008 __MyCompanyName__. All rights reserved.
  *
- *  https://github.com/rfwatson
+ *  Git repository: https://github.com/rfwatson
  */
 /*
 	SuperCollider real time audio synthesis system
- Copyright (c) 2002 James McCartney. All rights reserved.
+  Copyright (c) 2002 James McCartney. All rights reserved.
 	http://www.audiosynth.com
  
  This program is free software; you can redistribute it and/or modify

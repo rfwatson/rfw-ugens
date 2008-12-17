@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; color: #bf0000; min-height: 16.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; min-height: 16.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; color: #bf0000}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; color: #606060}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; color: #0000bf}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; color: #007300}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #0018f7}
+span.s3 {color: #000000}
+span.s4 {color: #0000bf}
+span.s5 {color: #007300}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>SwitchDelay<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>feedback delay line implementing switch-and-ramp buffer jumping</b></p>
+<p class="p2"><br></p>
+<p class="p1"><b>SwitchDelay.ar(input, drylevel, wetlevel, delaytime, delayfactor, maxdelaytime, mul, add)</b></p>
+<p class="p2"><br></p>
+<p class="p1">A feedback delay line which allows switching the buffer read pointer using the switch-and-ramp technique</p>
+<p class="p1">as described by Miller S. Puckette in his Theory and Techniques of Electronic Music book.</p>
+<p class="p1"><a href="http://crca.ucsd.edu/~msp/techniques/latest/book.pdf">http://crca.ucsd.edu/~msp/techniques/latest/book.pdf</a> (chapter 4)</p>
+<p class="p2"><br></p>
+<p class="p1">Altering the buffer read position, in order to affect the perceived delay speed/timing, creates a<span class="Apple-converted-space"> </span></p>
+<p class="p1">discontinuity in the signal, and usually comes with unwanted audible artefacts. SwitchDelay seeks to<span class="Apple-converted-space"> </span></p>
+<p class="p1">minimize these artefacts by use of the above technique. See the examples below for comparison.</p>
+<p class="p2"><br></p>
+<p class="p1"><b>input</b> - a signal to be filtered</p>
+<p class="p2"><br></p>
+<p class="p1"><b>drylevel</b> - level of dry signal (default: 1.0)</p>
+<p class="p2"><br></p>
+<p class="p1"><b>wetlevel</b> - level of delayed signal (default: 1.0)</p>
+<p class="p2"><br></p>
+<p class="p1"><b>delaytime</b> - seconds to delay signal (default: 1.0)</p>
+<p class="p2"><br></p>
+<p class="p1"><b>delayfactor</b> - multiplier for feedback level, affects the length of the feedback tail (default 0.7)</p>
+<p class="p1"><span class="Apple-converted-space">   <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>limited slightly below 1.0 to avoid speaker damaging mistakes</p>
+<p class="p2"><span class="Apple-converted-space">   <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span></p>
+<p class="p1"><b>maxdelaytime</b> - buffer size (default 20.0)</p>
+<p class="p2"><br></p>
+<p class="p1"><b><span class="Apple-converted-space">  </span>See also:</b> <a href="../../../../Applications/SuperCollider3/build/Help/UGens/Delays/CombN.html"><span class="s2">CombN</span></a><span class="s2"> </span>etc</p>
+<p class="p3"><br></p>
+<p class="p4"><br></p>
+<p class="p5">// Load a soundfile:</p>
+<p class="p6"><span class="s3">b = </span><span class="s4">Buffer</span><span class="s3">.read(s, </span>"sounds/a11wlk01.wav"<span class="s3">);</span></p>
+<p class="p4"><br></p>
+<p class="p5">// simple feedback line, no modulation</p>
+<p class="p7">(</p>
+<p class="p7"><span class="s4">SynthDef</span>(<span class="s5">'help-switchdelay-1'</span>, { <span class="s4">arg</span> out=0, bufnum, delaytime;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s4">Out</span>.ar(out,</p>
+<p class="p8"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>DelayLineCM2<span class="s3">.ar(</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s4">PlayBuf</span>.ar(numChannels: 1, bufnum: bufnum, loop: 0) * 0.5,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delaytime: delaytime,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wetlevel: 0.6</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
+<p class="p7"><span class="Apple-tab-span">	</span>);</p>
+<p class="p7">}).send(s);</p>
+<p class="p7">)</p>
+<p class="p4"><br></p>
+<p class="p9"><span class="s3">x = </span><span class="s4">Synth</span><span class="s3">(</span>'help-switchdelay-1'<span class="s3">, [</span>\bufnum<span class="s3">, b, </span>\delaytime<span class="s3">, 2.0]);</span></p>
+<p class="p7">x.free;</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5">// this time, change the buffer read pointer periodically.</p>
+<p class="p7">(</p>
+<p class="p7"><span class="s4">SynthDef</span>(<span class="s5">'help-switchdelay-2'</span>, { <span class="s4">arg</span> out=0, bufnum, delaytime;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s4">Out</span>.ar(out,</p>
+<p class="p8"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>DelayLineCM2<span class="s3">.ar(</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s4">PlayBuf</span>.ar(numChannels: 1, bufnum: bufnum, loop: 0) * 0.5,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wetlevel: 0.6,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delaytime: <span class="s4">Select</span>.kr(</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s4">Stepper</span>.kr(<span class="s4">Impulse</span>.kr(0.5), 0, 0, 3),</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[ 0.02, 0.1, 0.725, 0.25 ]<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
+<p class="p7"><span class="Apple-tab-span">	</span>);</p>
+<p class="p7">}).send(s);</p>
+<p class="p7">)</p>
+<p class="p4"><br></p>
+<p class="p9"><span class="s3">x = </span><span class="s4">Synth</span><span class="s3">(</span>'help-switchdelay-2'<span class="s3">, [</span>\bufnum<span class="s3">, b, </span>\loop<span class="s3">, 0, </span>\delaytime<span class="s3">, 2.0]);</span></p>
+<p class="p7">x.free;</p>
+<p class="p4"><br></p>
+</body>
+</html>
