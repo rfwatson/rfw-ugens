@@ -37,8 +37,8 @@ span.s1 {text-decoration: underline}
 <p class="p2"><br></p>
 <p class="p3"><i>Examples</i></p>
 <p class="p7"><br></p>
-<p class="p8">// stepper cycles between 0 and 5, average hovers around 2.5</p>
-<p class="p9">a = { AverageOutput.kr(Stepper.kr(Impulse.kr(100), min: 0, max: 5)).poll }.play;</p>
+<p class="p8">// stepper cycles between 0 and 1, average hovers around 0.5</p>
+<p class="p9">a = { AverageOutput.kr(Stepper.kr(Impulse.kr(1), min: 0, max: 1)).poll }.play;</p>
 <p class="p7"><br></p>
 <p class="p9">a.free;</p>
 </body>
