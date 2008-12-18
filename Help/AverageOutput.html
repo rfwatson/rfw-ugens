@@ -14,7 +14,7 @@ p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
 p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Helvetica}
 p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Helvetica; min-height: 16.0px}
 p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
-p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #7a341d}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #6c3821}
 p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 span.s1 {text-decoration: underline}
 </style>
@@ -37,8 +37,8 @@ span.s1 {text-decoration: underline}
 <p class="p2"><br></p>
 <p class="p3"><i>Examples</i></p>
 <p class="p7"><br></p>
-<p class="p8">// sine oscillator, average slowly settles to zero</p>
-<p class="p9">a = { AverageOutput.ar(SinOsc.ar(10000)).poll }.play;</p>
+<p class="p8">// stepper cycles between 0 and 5, average hovers around 2.5</p>
+<p class="p9">a = { AverageOutput.kr(Stepper.kr(Impulse.kr(100), min: 0, max: 5)).poll }.play;</p>
 <p class="p7"><br></p>
 <p class="p9">a.free;</p>
 </body>

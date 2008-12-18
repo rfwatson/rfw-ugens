@@ -36,8 +36,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="s2"><a href="http://crca.ucsd.edu/~msp/techniques/latest/book.pdf">http://crca.ucsd.edu/~msp/techniques/latest/book.pdf</a></span><span class="s3"> (chapter 4)</span></p>
 <p class="p2"><br></p>
 <p class="p1">Altering the buffer read position, in order to affect the perceived delay speed/timing, creates a<span class="Apple-converted-space"> </span></p>
-<p class="p1">discontinuity in the signal, typically creating unwanted audible artefacts. SwitchDelay seeks to<span class="Apple-converted-space"> </span></p>
-<p class="p1">minimize these artefacts by use of the above technique.<span class="Apple-converted-space"> </span></p>
+<p class="p1">discontinuity in the signal, typically causing unwanted audible artefacts. The switch-and-ramp technique seeks to neutralise these artefacts and allow switching with minimal clicks. See examples.</p>
 <p class="p2"><br></p>
 <p class="p1"><b>input</b> - a signal to be filtered</p>
 <p class="p1"><b>drylevel</b> - level of dry signal (default: 1.0)</p>
@@ -54,16 +53,17 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7">s = <span class="s5">Server</span>.local.boot;</p>
 <p class="p8"><span class="s3">b = </span><span class="s5">Buffer</span><span class="s3">.read(s, </span>"sounds/a11wlk01.wav"<span class="s3">);</span></p>
 <p class="p5"><br></p>
-<p class="p5"><br></p>
 <p class="p6">// simple feedback delay</p>
 <p class="p7">(</p>
 <p class="p7"><span class="s5">SynthDef</span>(<span class="s6">'help-switchdelay-1'</span>, { <span class="s5">arg</span> out=0, bufnum;</p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="s5">Out</span>.ar(out,</p>
-<p class="p9"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>SwitchDelay<span class="s3">.ar(</span></p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">PlayBuf</span>.ar(numChannels: 1, bufnum: bufnum, loop: 0) * 0.5,</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delaytime: 0.2,</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delayfactor: 0.85,</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wetlevel: 0.7</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pan2.ar(</p>
+<p class="p9"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>SwitchDelay<span class="s3">.ar(</span></p>
+<p class="p7"><span class="s5"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">PlayBuf</span>.ar(numChannels: 1, bufnum: bufnum, loop: 0) * 0.5,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delaytime: 0.4,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delayfactor: 0.6,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wetlevel: 0.7</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
 <p class="p7"><span class="Apple-tab-span">	</span>);</p>
 <p class="p7">}).send(s);</p>
@@ -77,12 +77,14 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7">(</p>
 <p class="p7"><span class="s5">SynthDef</span>(<span class="s6">'help-switchdelay-2'</span>, { <span class="s5">arg</span> out=0, bufnum, delaytime;</p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="s5">Out</span>.ar(out,</p>
-<p class="p9"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>SwitchDelay<span class="s3">.ar(</span></p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">PlayBuf</span>.ar(numChannels: 1, bufnum: bufnum, loop: 0) * 0.5,</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wetlevel: 0.6,</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delaytime: <span class="s5">Select</span>.kr(</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">Stepper</span>.kr(<span class="s5">Impulse</span>.kr(0.5), 0, 0, 3),</p>
-<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>#[ 0.02, 0.1, 0.725, 0.25 ]<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pan2.ar(</p>
+<p class="p9"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>SwitchDelay<span class="s3">.ar(</span></p>
+<p class="p7"><span class="s5"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">PlayBuf</span>.ar(numChannels: 1, bufnum: bufnum, loop: 0) * 0.5,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wetlevel: 0.6,</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delaytime: <span class="s5">Select</span>.kr(</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">Stepper</span>.kr(<span class="s5">Impulse</span>.kr(0.5), 0, 0, 3),</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>#[ 0.02, 0.1, 0.725, 0.25 ]<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
 <p class="p7"><span class="Apple-tab-span">	</span>);</p>
