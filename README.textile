@@ -1,12 +1,16 @@
-SuperCollider 3 Unit Generators
-===============================
+h1. SuperCollider 3 Unit Generators
 
-- SwitchDelay - feedback delay line implementing switch-and-ramp technique. Seeks to avoid unwanted artefacts when switching the buffer read position/delay time.
+h3. SwitchDelay
 
-- AverageOutput - calculates mean average of audio or control rate signal.
+feedback delay line implementing switch-and-ramp technique. Seeks to avoid unwanted artefacts when switching the buffer read position/delay time.<br/>
+"example - mp3":http://rfwatson.github.com/switchdelay.mp3 (832k)
 
+h3. AverageOutput 
 
-Released under the GNU General Public License.
+calculates mean average of audio or control rate signal.
+<br/><br/>
+
+*Released under the GNU General Public License.*
 
 ************************************************************************
 
