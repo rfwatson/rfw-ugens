@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.43">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Helvetica; min-height: 16.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #606060}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+span.s1 {text-decoration: underline}
+span.s2 {color: #000000}
+span.s3 {color: #0000bf}
+</style>
+</head>
+<body>
+<p class="p1"><b>XCut</b></p>
+<p class="p2"><br></p>
+<p class="p3">Select one from an array of inputs. When index is changed, fades between the old and new signals using switch-and-ramp technique, minimizing audible artefacts/clicks.</p>
+<p class="p2"><br></p>
+<p class="p4"><b><span class="s1">Class methods</span></b></p>
+<p class="p2"><br></p>
+<p class="p5"><b>*ar(inArray, which, envLength, mul, add)</b></p>
+<p class="p6"><br></p>
+<p class="p3"><b>inArray - </b>array of inputs.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>which</b> -<span class="Apple-converted-space">  </span>index of the signal to select.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>envLength</b> -<span class="Apple-converted-space">  </span>length of the x-fading window in samples, (default 2000).</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3"><i>Examples</i></p>
+<p class="p7"><br></p>
+<p class="p8"><br></p>
+<p class="p9">// execute this line first</p>
+<p class="p10"><span class="s2">b=</span><span class="s3">Buffer</span><span class="s2">.read(s,</span>"sounds/a11wlk01.wav"<span class="s2">);</span></p>
+<p class="p11"><br></p>
+<p class="p12">// now, execute this block and click the mouse button to switch between two signals</p>
+<p class="p13">(</p>
+<p class="p13">s.doWhenBooted {</p>
+<p class="p13"><span class="Apple-converted-space">  </span>{</p>
+<p class="p13"><span class="Apple-converted-space">    </span><span class="s3">var</span> b1,b2;</p>
+<p class="p13"><span class="Apple-converted-space">    </span>b1 = <span class="s3">PlayBuf</span>.ar(numChannels:1,bufnum:b,trigger:<span class="s3">LFPulse</span>.ar((1/b.duration)*3));</p>
+<p class="p13"><span class="Apple-converted-space">    </span>b2 = <span class="s3">PlayBuf</span>.ar(numChannels:1,bufnum:b,startPos:b.numFrames/2,trigger:<span class="s3">LFPulse</span>.ar((1/b.duration)*2));</p>
+<p class="p11"><span class="Apple-converted-space">    </span></p>
+<p class="p13"><span class="Apple-converted-space">    </span><span class="s3">XCut</span>.ar([b1, b2], <span class="s3">MouseButton</span>.kr(0,1,0))</p>
+<p class="p13"><span class="Apple-converted-space">  </span>}.play</p>
+<p class="p13">}</p>
+<p class="p13">)</p>
+</body>
+</html>
