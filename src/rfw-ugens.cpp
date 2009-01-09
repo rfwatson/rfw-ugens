@@ -47,8 +47,10 @@ struct AverageOutput : public Unit  {
 };
 
 struct XCut : public Unit {
-    float prev_trig;
-    uint32 envlen;
+    float offset_start, offset_current;
+    int numInputs, envlen, current;
+    uint32 offset_timer;
+    char crossfading;
 };
 
 extern "C" {  	
@@ -65,9 +67,13 @@ extern "C" {
 }
 
 void XCut_Ctor(XCut *unit) {
-    printf("Hello world, num inputs is %d\n", (int)ZIN0(2));
-
-    //unit->envlen = (uint32)ZIN0(1);
+    unit->envlen = (int)ZIN0(1);
+    unit->offset_timer = unit->envlen;
+    unit->numInputs = (int)ZIN0(2);
+    unit->offset_start = 0.;
+    unit->offset_current = 0.;
+    unit->crossfading = 0;
+    unit->current = 0;
     
     SETCALC(XCut_next);
 }
@@ -75,6 +81,57 @@ void XCut_Ctor(XCut *unit) {
 void XCut_next(XCut *unit, int inNumSamples) {
     RGen& tgen = *unit->mParent->mRGen;
     
+    int requested, numInputs;
+    float ratio;
+    
+    char crossfading = unit->crossfading;
+    int envlen = unit->envlen;
+    int current = unit->current;
+    uint32 offset_timer = unit->offset_timer;
+    float offset_start = unit->offset_start;
+    float offset_current = unit->offset_current;
+    float *in = IN(3 + current);
+    float *out = OUT(0);
+     
+    for(int i=0; i < inNumSamples; ++i) {
+        requested = (int)ZIN0(0);
+        if(requested != current) { // switch
+            float oldval, newval, offset;
+            oldval = in[i] + offset_current;
+            current = requested;
+            in = IN(3 + current);
+            newval = in[i];
+
+            offset = oldval - newval;
+            offset_start = offset;
+            offset_current = offset;
+            
+            //printf("oldval was %f, newval is %f, offset is %f\n",oldval,newval,offset);
+            crossfading = 1;
+            offset_timer = envlen;
+        }
+        
+        //printf("applying offset of %f to %f\n",offset_current,in[i]);
+        out[i] = in[i] + offset_current;
+        
+        if(crossfading) {
+            --offset_timer;
+            
+            if(offset_timer > 0) {
+                ratio = (offset_timer / ENVLEN);
+                offset_current = offset_start * ratio;
+            } else {
+                crossfading = 0;
+                offset_current = 0.;
+            }
+        }
+    }
+    
+    unit->crossfading = crossfading;
+    unit->offset_timer = offset_timer;
+    unit->offset_start = offset_start;
+    unit->offset_current = offset_current;
+    unit->current = current;
 }
 
 void XCut_Dtor(XCut *unit) {
