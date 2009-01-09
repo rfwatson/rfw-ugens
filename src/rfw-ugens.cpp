@@ -46,6 +46,11 @@ struct AverageOutput : public Unit  {
     uint32 count;
 };
 
+struct XCut : public Unit {
+    float prev_trig;
+    uint32 envlen;
+};
+
 extern "C" {  	
 	void SwitchDelay_next(SwitchDelay *unit, int inNumSamples);
 	void SwitchDelay_Ctor(SwitchDelay* unit);
@@ -53,8 +58,28 @@ extern "C" {
 	
 	void AverageOutput_next(AverageOutput *unit, int inNumSamples);
 	void AverageOutput_Ctor(AverageOutput* unit);
+    
+    void XCut_next(XCut *unit, int inNumSamples);
+    void XCut_Ctor(XCut *unit);
+    void XCut_Dtor(XCut *unit);
 }
 
+void XCut_Ctor(XCut *unit) {
+    printf("Hello world, num inputs is %d\n", (int)ZIN0(2));
+
+    //unit->envlen = (uint32)ZIN0(1);
+    
+    SETCALC(XCut_next);
+}
+
+void XCut_next(XCut *unit, int inNumSamples) {
+    RGen& tgen = *unit->mParent->mRGen;
+    
+}
+
+void XCut_Dtor(XCut *unit) {
+    // nothing to do for now
+}
 
 void SwitchDelay_Ctor( SwitchDelay* unit ) {
 	RGen& rgen = *unit->mParent->mRGen;
@@ -200,6 +225,7 @@ void AverageOutput_next( AverageOutput *unit, int inNumSamples ) {
 extern "C" void load(InterfaceTable *inTable) {
 	ft = inTable;	
 	DefineDtorUnit(SwitchDelay);
+    DefineDtorUnit(XCut);
 	DefineSimpleUnit(AverageOutput);
 }
 
