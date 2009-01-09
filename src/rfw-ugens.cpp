@@ -32,7 +32,7 @@
 
 static InterfaceTable *ft; 
 
-#define ENVLEN 2000.0 // TODO modulate
+#define ENVLEN 2000.0 // for SwitchDelay. TODO modulate
 
 struct SwitchDelay : public Unit  {
     float *buffer;
@@ -48,7 +48,7 @@ struct AverageOutput : public Unit  {
 
 struct XCut : public Unit {
     float offset_start, offset_current;
-    int numInputs, envlen, current;
+    int envlen, current;
     uint32 offset_timer;
     char crossfading;
 };
@@ -63,13 +63,11 @@ extern "C" {
     
     void XCut_next(XCut *unit, int inNumSamples);
     void XCut_Ctor(XCut *unit);
-    void XCut_Dtor(XCut *unit);
 }
 
 void XCut_Ctor(XCut *unit) {
     unit->envlen = (int)ZIN0(1);
     unit->offset_timer = unit->envlen;
-    unit->numInputs = (int)ZIN0(2);
     unit->offset_start = 0.;
     unit->offset_current = 0.;
     unit->crossfading = 0;
@@ -81,7 +79,7 @@ void XCut_Ctor(XCut *unit) {
 void XCut_next(XCut *unit, int inNumSamples) {
     RGen& tgen = *unit->mParent->mRGen;
     
-    int requested, numInputs;
+    int requested;
     float ratio;
     
     char crossfading = unit->crossfading;
@@ -106,12 +104,10 @@ void XCut_next(XCut *unit, int inNumSamples) {
             offset_start = offset;
             offset_current = offset;
             
-            //printf("oldval was %f, newval is %f, offset is %f\n",oldval,newval,offset);
             crossfading = 1;
             offset_timer = envlen;
         }
         
-        //printf("applying offset of %f to %f\n",offset_current,in[i]);
         out[i] = in[i] + offset_current;
         
         if(crossfading) {
@@ -132,10 +128,6 @@ void XCut_next(XCut *unit, int inNumSamples) {
     unit->offset_start = offset_start;
     unit->offset_current = offset_current;
     unit->current = current;
-}
-
-void XCut_Dtor(XCut *unit) {
-    // nothing to do for now
 }
 
 void SwitchDelay_Ctor( SwitchDelay* unit ) {
@@ -282,7 +274,7 @@ void AverageOutput_next( AverageOutput *unit, int inNumSamples ) {
 extern "C" void load(InterfaceTable *inTable) {
 	ft = inTable;	
 	DefineDtorUnit(SwitchDelay);
-    DefineDtorUnit(XCut);
+    DefineSimpleUnit(XCut);
 	DefineSimpleUnit(AverageOutput);
 }
 
