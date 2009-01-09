@@ -5,6 +5,10 @@ h3. SwitchDelay
 feedback delay line implementing switch-and-ramp technique. Seeks to avoid unwanted artefacts when switching the buffer read position/delay time.<br/>
 "example - mp3":http://rfwatson.github.com/switchdelay.mp3 (832k)
 
+h3. XCut
+
+select one from an array of signals, when index changed ramps smoothly between old and new signals
+
 h3. AverageOutput 
 
 calculates mean average of audio or control rate signal.

@@ -17,7 +17,7 @@ SwitchDelay : UGen {
 }
 
 XCut : UGen {
-  *ar { arg inArray, which=0.0, envLength=2000;
-    ^this.multiNewList(['audio', which, envLength, inArray.size] ++ inArray.asArray);
+  *ar { arg inArray, which=0.0, envLength=2000, mul=1.0, add=0.0;
+    ^this.multiNewList(['audio', which, envLength, inArray.size] ++ inArray.asArray).madd(mul, add);
   }
 }
